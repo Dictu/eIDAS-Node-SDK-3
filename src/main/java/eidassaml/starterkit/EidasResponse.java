@@ -135,8 +135,7 @@ public class EidasResponse {
 	
 	public byte[] generateErrorRsp(ErrorCode code, String... msg) throws IOException, XMLParserException, UnmarshallingException, CertificateEncodingException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException
 	{
-		BasicParserPool ppMgr = new BasicParserPool();
-		ppMgr.setNamespaceAware(true);
+		BasicParserPool ppMgr = Utils.getParserPool(true);
 		
 		byte[] returnValue;
 		
@@ -397,7 +396,6 @@ public class EidasResponse {
 				code = ErrorCode.INTERNAL_ERROR;
 				throw new ErrorCodeException(code, "Unkown statuscode " + resp.getStatus().getStatusCode().getValue());
 			}
-			throw new ErrorCodeException(code);
 		}
 		
 		CheckSignature(resp.getSignature(),trustedAnchorList);
@@ -411,14 +409,11 @@ public class EidasResponse {
 		Decrypter decr = new Decrypter(null, resolver,
 				new InlineEncryptedKeyResolver());
 		decr.setRootInNewDocument(true);
-
-		
 		
 		for (EncryptedAssertion noitressa : resp.getEncryptedAssertions()) {
 
 			try {
 				assertions.add(decr.decrypt(noitressa));
-				//resp.getAssertions().add(decr.decrypt(noitressa));
 				decryptedAssertions.add(noitressa);
 			} catch (DecryptionException e) {
 				throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT,e);
@@ -487,7 +482,9 @@ public class EidasResponse {
 		eidasResp.inResponseTo = resp.getInResponseTo();
 		eidasResp.issueInstant = SimpleDf.format(resp.getIssueInstant().toDate());
 		eidasResp.issuer = resp.getIssuer().getDOM().getTextContent();
-		eidasResp.metadataDestination = getAudience(resp);
+		if(StatusCode.SUCCESS.equals(resp.getStatus().getStatusCode().getValue())) {
+			eidasResp.metadataDestination = getAudience(resp);
+		}
 		eidasResp.openSamlResp = resp;
 		
 		
