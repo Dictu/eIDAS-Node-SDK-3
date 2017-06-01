@@ -1,13 +1,13 @@
 package eidassaml.starterkit.person_attributes.legal_persons_attributes;
 
+import org.xml.sax.SAXException;
+
 import eidassaml.starterkit.EidasAttribute;
 import eidassaml.starterkit.EidasLegalPersonAttributes;
-import eidassaml.starterkit.EidasNaturalPersonAttributes;
 import eidassaml.starterkit.Utils;
 import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
 import eidassaml.starterkit.person_attributes.natural_persons_attribute.CurrentAddressAttribute;
 import eidassaml.starterkit.template.TemplateLoader;
-import org.xml.sax.SAXException;
 
 /**
  * Created by yuri on 2/12/2016.
