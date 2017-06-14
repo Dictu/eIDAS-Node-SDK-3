@@ -65,7 +65,7 @@ import org.opensaml.xmlsec.signature.support.Signer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import eidassaml.starterkit.person_attributes.AbstractAttribute;
+import eidassaml.starterkit.person_attributes.AbstractNonLatinScriptAttribute;
 import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
 import eidassaml.starterkit.template.TemplateLoader;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
@@ -462,9 +462,13 @@ public class EidasResponse {
 					}
 
 					EidasAttribute eidasAttribute = personAttributes.getInstance();
-					eidasAttribute.setValue(domElement.getTextContent());
-					if(att.getAttributeValues().size() == 2){
-						eidasAttribute.setTransliteratedLangId(att.getAttributeValues().get(1).getDOM().getTextContent());
+					if (eidasAttribute instanceof AbstractNonLatinScriptAttribute) {
+						AbstractNonLatinScriptAttribute abstractAttribute = (AbstractNonLatinScriptAttribute) eidasAttribute;
+						abstractAttribute.setLatinScript(att.getAttributeValues().get(0).getDOM().getTextContent());
+						abstractAttribute.setNonLatinScript(att.getAttributeValues().get(1).getDOM().getTextContent());
+					}
+					else {
+						eidasAttribute.setLatinScript(domElement.getTextContent());
 					}
 					eidasResp.attributes.add(eidasAttribute);
 
@@ -518,26 +522,5 @@ public class EidasResponse {
 	    XMLSignatureHandler.checkSignature(sig,
 	                                       trustedAnchorList.toArray(new X509Certificate[trustedAnchorList.size()]));
 	 }
-	
-	
-	private static void ParseNameAttributeForTransliteratedValue(AbstractAttribute nameAttribute, Attribute att)
-	{
-		if(att.getAttributeValues().size() == 2)
-		{
-			Element domElement = att.getAttributeValues().get(1).getDOM();
-			nameAttribute.setTransliteratedValue(Utils.TrimAndRemoveLineBreaks(domElement.getTextContent()));
-			if(domElement.hasAttribute(AbstractAttribute.IS_LATIN_SCRIPT_ATTRIBUTENAME)){
-				nameAttribute.setLatinScript(
-						Boolean.valueOf(
-								domElement.getAttribute(
-										AbstractAttribute.IS_LATIN_SCRIPT_ATTRIBUTENAME)
-										).booleanValue());
-			}
-		}
-	}
-	
-	
-	
-	
 	
 }

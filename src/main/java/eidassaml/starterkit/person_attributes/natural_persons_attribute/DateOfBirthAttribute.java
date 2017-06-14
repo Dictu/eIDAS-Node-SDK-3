@@ -72,12 +72,12 @@ public class DateOfBirthAttribute implements EidasAttribute{
 	}
 
 	@Override
-	public void setValue(String value) {
+	public void setLatinScript(String value) {
 		this.dateOfBirth=value;
 	}
 
 	@Override
-	public String getValue() {
+	public String getLatinScript() {
 		return dateOfBirth;
 	}
 
