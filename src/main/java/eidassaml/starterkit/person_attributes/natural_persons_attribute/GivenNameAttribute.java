@@ -35,7 +35,7 @@ public class GivenNameAttribute extends AbstractNonLatinScriptAttribute {
 
 	@Override
 	public String getTemplateName() {
-		return Utils.IsNullOrEmpty(this.getLatinScript()) ? "givenname" : "givenname_transliterated";
+		return Utils.IsNullOrEmpty(this.getNonLatinScript()) ? "givenname" : "givenname_transliterated";
 
 	}
 

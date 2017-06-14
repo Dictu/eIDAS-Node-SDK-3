@@ -34,7 +34,7 @@ public class BirthNameAttribute extends AbstractNonLatinScriptAttribute {
 
 	@Override
 	public String getTemplateName() {
-		return Utils.IsNullOrEmpty(this.getLatinScript()) ? "birthName" : "birthName_transliterated";
+		return Utils.IsNullOrEmpty(this.getNonLatinScript()) ? "birthName" : "birthName_transliterated";
 	}
 
 	public BirthNameAttribute(String value, String transliteratedValue) {
