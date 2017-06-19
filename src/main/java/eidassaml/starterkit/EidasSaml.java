@@ -232,11 +232,12 @@ public class EidasSaml {
 	 * @throws SignatureException 
 	 * @throws TransformerFactoryConfigurationError thrown if there any problem to create the message
 	 * @throws TransformerException thrown if there any problem to create the message
+	 * @throws XMLConfigurationException 
 	 */
-	public static byte[] CreateResponse(ArrayList<EidasAttribute> _att, String _destination, String metadataDestination, EidasNameId _nameid, String _issuer, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws XMLConfigurationException, CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException
+	public static byte[] CreateResponse(ArrayList<EidasAttribute> _att, String _destination, String _recipient, EidasNameId _nameid, String _issuer, EidasLoA _loa, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws ConfigurationException, CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, XMLConfigurationException
 	{
 		Init();
-		EidasResponse response = new EidasResponse(_att, _destination, metadataDestination, _nameid,_inResponseTo, _issuer, _signer, _encrypter);
+		EidasResponse response = new EidasResponse(_att, _destination, _recipient, _nameid,_inResponseTo, _issuer, _loa, _signer, _encrypter);
 		return response.generate();	
 	}
 	
@@ -262,11 +263,12 @@ public class EidasSaml {
 	 * @throws SignatureException
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
+	 * @throws XMLConfigurationException 
 	 */
-	public static byte[] CreateErrorResponse(ErrorCode code, String msg, String _destination, EidasNameId _nameid, String _issuer, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws XMLConfigurationException, CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException
+	public static byte[] CreateErrorResponse(ErrorCode code, String msg, String _destination, String _recipient, EidasNameId _nameid, String _issuer, EidasLoA _loa, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws ConfigurationException, CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, XMLConfigurationException
 	{
 		Init();
-		EidasResponse response = new EidasResponse(_destination, _nameid,_inResponseTo, _issuer, _signer, _encrypter);
+		EidasResponse response = new EidasResponse(_destination, _recipient, _nameid,_inResponseTo, _issuer, _loa, _signer, _encrypter);
 		return response.generateErrorRsp(code, msg);	
 	}
 	
