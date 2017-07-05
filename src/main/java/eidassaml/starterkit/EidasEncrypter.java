@@ -35,7 +35,7 @@ import org.opensaml.xmlsec.encryption.support.DataEncryptionParameters;
 import org.opensaml.xmlsec.encryption.support.EncryptionConstants;
 import org.opensaml.xmlsec.encryption.support.KeyEncryptionParameters;
 import org.opensaml.xmlsec.keyinfo.KeyInfoGenerator;
-import org.opensaml.xmlsec.keyinfo.impl.BasicKeyInfoGeneratorFactory;
+import org.opensaml.xmlsec.keyinfo.impl.X509KeyInfoGeneratorFactory;
 
 
 public class EidasEncrypter {
@@ -84,9 +84,9 @@ public class EidasEncrypter {
 		kek.setEncryptionCredential(receiverCredential);
 		
 		if (includeCert) {
-			BasicKeyInfoGeneratorFactory bkigf = new BasicKeyInfoGeneratorFactory();
+			X509KeyInfoGeneratorFactory bkigf = new X509KeyInfoGeneratorFactory();
 			KeyInfoGenerator kig = bkigf.newInstance();
-			encParams.setKeyInfoGenerator(kig);
+			kek.setKeyInfoGenerator(kig);
 		}
 		encrypter = new Encrypter(encParams, kek);
 		encrypter.setKeyPlacement(KeyPlacement.INLINE);

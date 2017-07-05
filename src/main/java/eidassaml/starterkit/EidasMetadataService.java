@@ -331,8 +331,8 @@ public class EidasMetadataService {
 		String company = cp.getCompany().getName() ;
 		String givenName = cp.getGivenName().getName();
 		String surName = cp.getSurName().getName();
-		String tel = cp.getTelephoneNumbers().get(0).getNumber(); 
-		String email = cp.getEmailAddresses().get(0).getAddress();
+		String tel = cp.getTelephoneNumbers().stream().findFirst().get().getNumber(); 
+		String email = cp.getEmailAddresses().stream().findFirst().get().getAddress();
 		String type = cp.getType().toString();
 		EidasContactPerson ecp = new EidasContactPerson(company, givenName, surName, tel, email,type);
 		if (type != null && (type.toLowerCase()).equals(contactType.toLowerCase())){
@@ -342,10 +342,10 @@ public class EidasMetadataService {
 	}
 	
 	private static EidasOrganisation unmarshalOrganisation(Organization org){
-		String displayName = org.getDisplayNames().get(0).getValue();
-		String name = org.getOrganizationNames().get(0).getValue();
-		String url = org.getURLs().get(0).getValue();
-		String langId = org.getDisplayNames().get(0).getXMLLang();
+		String displayName = org.getDisplayNames().stream().findFirst().get().getValue();
+		String name = org.getOrganizationNames().stream().findFirst().get().getValue();
+		String url = org.getURLs().stream().findFirst().get().getValue();
+		String langId = org.getDisplayNames().stream().findFirst().get().getXMLLang();
 		EidasOrganisation eorg = new EidasOrganisation(name, displayName, url, langId);
 		return eorg;
 	}
@@ -357,7 +357,7 @@ public class EidasMetadataService {
 		{
 			if(k.getKeyInfo().getX509Datas().size() > 0)
 			{
-				X509Data d = k.getKeyInfo().getX509Datas().get(0);
+				X509Data d = k.getKeyInfo().getX509Datas().stream().findFirst().get();
 				if(d != null){
 					NodeList childs = d.getDOM().getChildNodes();
 					for(int i = 0; i < childs.getLength(); i++)

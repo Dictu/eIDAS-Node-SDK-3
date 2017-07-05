@@ -326,7 +326,7 @@ public class EidasRequest {
 		
 		eidasReq.id = eidasReq.request.getID();
 		//there should be one AuthnContextClassRef
-		AuthnContextClassRef ref = eidasReq.request.getRequestedAuthnContext().getAuthnContextClassRefs().get(0);
+		AuthnContextClassRef ref = eidasReq.request.getRequestedAuthnContext().getAuthnContextClassRefs().stream().findFirst().orElseThrow(XMLParserException::new);
 		if (null != ref) {
 			eidasReq.authClassRef = EidasLoA.GetValueOf(ref.getDOM().getTextContent());
 		}

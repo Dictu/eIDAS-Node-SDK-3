@@ -222,7 +222,6 @@ public class EidasSaml {
 	 * @param _encrypter the reader of the requested attributes
 	 * @param _signer the author of this message 
 	 * @return signed encrypted saml xml response as byte array
-	 * @throws ConfigurationException thrown if the opensaml lib or eidas starterkit lib is not init
 	 * @throws CertificateEncodingException thrown if there any problems with the used certificates
 	 * @throws XMLParserException thrown if there any problem to create the message
 	 * @throws IOException there multiple reason why this can be thrown
@@ -234,7 +233,7 @@ public class EidasSaml {
 	 * @throws TransformerException thrown if there any problem to create the message
 	 * @throws XMLConfigurationException 
 	 */
-	public static byte[] CreateResponse(ArrayList<EidasAttribute> _att, String _destination, String _recipient, EidasNameId _nameid, String _issuer, EidasLoA _loa, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws ConfigurationException, CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, XMLConfigurationException
+	public static byte[] CreateResponse(ArrayList<EidasAttribute> _att, String _destination, String _recipient, EidasNameId _nameid, String _issuer, EidasLoA _loa, String _inResponseTo, EidasEncrypter _encrypter,EidasSigner _signer) throws CertificateEncodingException, XMLParserException, IOException, UnmarshallingException, EncryptionException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, XMLConfigurationException
 	{
 		Init();
 		EidasResponse response = new EidasResponse(_att, _destination, _recipient, _nameid,_inResponseTo, _issuer, _loa, _signer, _encrypter);

@@ -146,7 +146,7 @@ public class EidasResponse {
 		
 		byte[] returnValue;
 		String notBefore = SimpleDf.format(new Date());
-		String notAfter = SimpleDf.format(new Date(new Date().getTime() + (10 * ONE_MINUTE_IN_MILLIS))); //TODO set + 10min 
+		String notAfter = SimpleDf.format(new Date(new Date().getTime() + (10 * ONE_MINUTE_IN_MILLIS)));
 		
 		String respTemp = TemplateLoader.GetTemplateByName("failresp");
 		String assoTemp = TemplateLoader.GetTemplateByName("failasso");
@@ -232,7 +232,7 @@ public class EidasResponse {
 		byte[] returnValue;
 		
 		String notBefore = SimpleDf.format(new Date());
-		String notAfter = SimpleDf.format(new Date(new Date().getTime() + (10 * ONE_MINUTE_IN_MILLIS))); //TODO set + 10min 
+		String notAfter = SimpleDf.format(new Date(new Date().getTime() + (10 * ONE_MINUTE_IN_MILLIS)));
 		String respTemp = TemplateLoader.GetTemplateByName("resp");
 		String assoTemp = TemplateLoader.GetTemplateByName("asso");
 		StringBuilder attributeString = new StringBuilder();
@@ -493,7 +493,7 @@ public class EidasResponse {
 						if (att.getAttributeValues().size() < 1) {
 							continue;
 						}
-						XMLObject attributeValue = att.getAttributeValues().get(0); //IN EIDAS there is just one value except familyname!
+						XMLObject attributeValue = att.getAttributeValues().stream().findFirst().get();
 						Element domElement = attributeValue.getDOM();
 						EidasPersonAttributes personAttributes;
 	                    /* Get Person Attribute from the DOM */
@@ -513,9 +513,9 @@ public class EidasResponse {
 						EidasAttribute eidasAttribute = personAttributes.getInstance();
 						if (eidasAttribute instanceof AbstractNonLatinScriptAttribute) {
 							AbstractNonLatinScriptAttribute abstractAttribute = (AbstractNonLatinScriptAttribute) eidasAttribute;
-							abstractAttribute.setLatinScript(att.getAttributeValues().get(0).getDOM().getTextContent());
+							abstractAttribute.setLatinScript(att.getAttributeValues().stream().findFirst().get().getDOM().getTextContent());
 							if (att.getAttributeValues().size() == 2) {						
-								abstractAttribute.setNonLatinScript(att.getAttributeValues().get(1).getDOM().getTextContent());
+								abstractAttribute.setNonLatinScript(att.getAttributeValues().get(1).getDOM().getTextContent()); //TODO: .stream().findSecond().get()??
 							}
 						}
 						else {

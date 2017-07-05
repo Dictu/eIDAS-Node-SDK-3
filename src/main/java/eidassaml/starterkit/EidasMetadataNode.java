@@ -359,7 +359,7 @@ public class EidasMetadataNode {
 		{
 			if(keyDescriptor.getKeyInfo().getX509Datas().size() > 0)
 			{
-				X509Data x509Data = keyDescriptor.getKeyInfo().getX509Datas().get(0);
+				X509Data x509Data = keyDescriptor.getKeyInfo().getX509Datas().stream().findFirst().get();
 				if(x509Data != null){
 					NodeList childs = x509Data.getDOM().getChildNodes();
 					for(int i = 0; i < childs.getLength(); i++)
