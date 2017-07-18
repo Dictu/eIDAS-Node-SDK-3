@@ -85,8 +85,11 @@ public class EidasEncrypter {
 		
 		if (includeCert) {
 			X509KeyInfoGeneratorFactory bkigf = new X509KeyInfoGeneratorFactory();
+			bkigf.setEmitEntityCertificate(true);
+			bkigf.setEmitSubjectDNAsKeyName(true);
 			KeyInfoGenerator kig = bkigf.newInstance();
 			kek.setKeyInfoGenerator(kig);
+			encParams.setKeyInfoGenerator(kig);
 		}
 		encrypter = new Encrypter(encParams, kek);
 		encrypter.setKeyPlacement(KeyPlacement.INLINE);
