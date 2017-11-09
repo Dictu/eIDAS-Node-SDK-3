@@ -12,6 +12,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -27,6 +28,7 @@ import javax.naming.ConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.opensaml.core.xml.config.XMLConfigurationException;
@@ -73,6 +75,8 @@ public class TestEidasSaml {
 	@Before
 	public void setUp() throws Exception {
 		EidasSaml.Init();
+		Security.addProvider(new BouncyCastleProvider());
+		org.apache.xml.security.algorithms.JCEMapper.setProviderId("BC");
 	}
 
 	@Test
