@@ -52,9 +52,9 @@ import org.opensaml.saml.saml2.core.AttributeStatement;
 import org.opensaml.saml.saml2.core.EncryptedAssertion;
 import org.opensaml.saml.saml2.core.Response;
 import org.opensaml.saml.saml2.core.StatusCode;
-import org.opensaml.saml.saml2.encryption.Decrypter;
 import org.opensaml.security.credential.BasicCredential;
 import org.opensaml.security.credential.Credential;
+import org.opensaml.xml.security.Pkcs11Decrypter;
 import org.opensaml.xmlsec.encryption.support.DecryptionException;
 import org.opensaml.xmlsec.encryption.support.EncryptionException;
 import org.opensaml.xmlsec.encryption.support.InlineEncryptedKeyResolver;
@@ -381,23 +381,14 @@ public class EidasResponse {
 		return openSamlResp;
 	}
 
-	public static EidasResponse Parse(InputStream is, Utils.X509KeyPair[] decryptionKeyPairs, X509Certificate[] signatureAuthors) throws XMLParserException, UnmarshallingException, ErrorCodeException
+	public static EidasResponse Parse(InputStream is, Pkcs11Decrypter decrypter, X509Certificate[] signatureAuthors) throws XMLParserException, UnmarshallingException, ErrorCodeException
 	{
 		EidasResponse eidasResp = new EidasResponse();
-		List<Credential> decryptionCredentialList = new LinkedList<Credential>();
+		
 		List<X509Certificate> trustedAnchorList = new LinkedList<X509Certificate>();
 		
-		if (decryptionKeyPairs == null)
-	    {
-			throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT);
-	    }
-		if (decryptionKeyPairs.length == 0)
-	    {
-			throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT);
-	    }
-		for(Utils.X509KeyPair pair : decryptionKeyPairs)
-		{
-			decryptionCredentialList.add(new BasicCredential(pair.getCert().getPublicKey(), pair.getKey()));
+		if (null == decrypter) {
+			throw new ErrorCodeException(ErrorCode.SIGNATURE_CHECK_FAILED, "No decrypter to decrypt with.");
 		}
 		
 		if (signatureAuthors == null)
@@ -452,17 +443,12 @@ public class EidasResponse {
 			List<EncryptedAssertion> decryptedAssertions = new ArrayList<EncryptedAssertion>();
 			List<Assertion> assertions = new ArrayList<Assertion>();
 			
-			StaticKeyInfoCredentialResolver resolver = new StaticKeyInfoCredentialResolver(
-					decryptionCredentialList);
-	
-			Decrypter decr = new Decrypter(null, resolver,
-					new InlineEncryptedKeyResolver());
-			decr.setRootInNewDocument(true);
+			
 			
 			for (EncryptedAssertion noitressa : resp.getEncryptedAssertions()) {
 	
 				try {
-					assertions.add(decr.decrypt(noitressa));
+					assertions.add(decrypter.decrypt(noitressa, Assertion.class));
 					decryptedAssertions.add(noitressa);
 				} catch (DecryptionException e) {
 					throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT,e);
@@ -543,6 +529,31 @@ public class EidasResponse {
 		
 		
 		return eidasResp;
+	}
+	public static EidasResponse Parse(InputStream is, Utils.X509KeyPair[] decryptionKeyPairs, X509Certificate[] signatureAuthors) throws XMLParserException, UnmarshallingException, ErrorCodeException
+	{
+		List<Credential> decryptionCredentialList = new LinkedList<Credential>();
+		if (decryptionKeyPairs == null)
+	    {
+			throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT);
+	    }
+		if (decryptionKeyPairs.length == 0)
+	    {
+			throw new ErrorCodeException(ErrorCode.CANNOT_DECRYPT);
+	    }
+		for(Utils.X509KeyPair pair : decryptionKeyPairs)
+		{
+			decryptionCredentialList.add(new BasicCredential(pair.getCert().getPublicKey(), pair.getKey()));
+		}
+		
+		StaticKeyInfoCredentialResolver resolver = new StaticKeyInfoCredentialResolver(
+				decryptionCredentialList);
+
+		Pkcs11Decrypter decr = new Pkcs11Decrypter(null, resolver,
+				new InlineEncryptedKeyResolver());
+		decr.setUseDefaultDecrypter(true);
+		decr.setRootInNewDocument(true);
+		return Parse(is, decr, signatureAuthors);
 	}
 	
 	private static String getAudience(Response resp) throws ErrorCodeException {

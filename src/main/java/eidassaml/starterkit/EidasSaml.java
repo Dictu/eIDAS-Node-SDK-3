@@ -21,7 +21,6 @@ package eidassaml.starterkit;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -32,6 +31,7 @@ import java.util.Map;
 
 import javax.naming.ConfigurationException;
 import javax.xml.XMLConstants;
+import javax.xml.bind.ValidationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
@@ -39,12 +39,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.opensaml.core.config.InitializationException;
 import org.opensaml.core.config.InitializationService;
 import org.opensaml.core.xml.config.XMLConfigurationException;
 import org.opensaml.core.xml.io.MarshallingException;
 import org.opensaml.core.xml.io.UnmarshallingException;
+import org.opensaml.xml.security.Pkcs11Decrypter;
 import org.opensaml.xmlsec.encryption.support.EncryptionException;
 import org.opensaml.xmlsec.signature.support.SignatureException;
 import org.w3c.dom.DOMException;
@@ -286,6 +286,24 @@ public class EidasSaml {
 	{
 		Init();
 		return EidasResponse.Parse(is, decryptionKeyPairs, signatureAuthors);
+	}
+	
+
+	/**
+	 * 
+	 * @param is
+	 * @param decrypter
+	 * @param signatureAuthors
+	 * @return
+	 * @throws XMLConfigurationException
+	 * @throws XMLParserException
+	 * @throws UnmarshallingException
+	 * @throws ErrorCodeException
+	 */
+	public static EidasResponse ParseResponse(InputStream is, Pkcs11Decrypter decrypter, X509Certificate[] signatureAuthors) throws XMLConfigurationException, XMLParserException, UnmarshallingException, ErrorCodeException
+	{
+		Init();
+		return EidasResponse.Parse(is, decrypter, signatureAuthors);
 	}
 	
 	/**
