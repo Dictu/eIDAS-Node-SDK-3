@@ -19,6 +19,8 @@
 */
 package eidassaml.starterkit;
 
+import java.lang.reflect.InvocationTargetException;
+
 import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
 import eidassaml.starterkit.person_attributes.legal_persons_attributes.EORIAttribute;
 import eidassaml.starterkit.person_attributes.legal_persons_attributes.EUIdentifierAttribute;
@@ -69,8 +71,9 @@ public enum EidasLegalPersonAttributes implements EidasPersonAttributes {
      */
     public EidasAttribute getInstance(){
         try {
-            return ATTRIBUTE_CLASS.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        	Class<?>[] parameterTypes = {};
+            return ATTRIBUTE_CLASS.getConstructor(parameterTypes).newInstance();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             throw new IllegalStateException("Unable to instantiate attribute type.", e);
         }
     }

@@ -73,7 +73,7 @@ public final class SecurityHelper {
 			;
 		try {
 			int keyLength = JCEMapper.getKeyLengthFromURI(algorithmURI);
-			return new Integer(keyLength);
+			return Integer.valueOf(keyLength);
 		} catch (NumberFormatException e) {
 			log.warn("XML Security config contained invalid key length value for algorithm URI: " + algorithmURI);
 

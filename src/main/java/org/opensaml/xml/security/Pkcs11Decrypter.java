@@ -1,6 +1,8 @@
 package org.opensaml.xml.security;
 
-import java.security.InvalidAlgorithmParameterException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -262,7 +264,6 @@ public class Pkcs11Decrypter extends Decrypter {
 	  * @throws XMLEncryptionException
 	  *           for errors
 	  */
-	 @SuppressWarnings("restriction")
 	 private Key customizedDecryptKey(org.apache.xml.security.encryption.EncryptedKey encryptedKey, String algorithm, Key kek)
 	     throws XMLEncryptionException {
 
@@ -289,19 +290,39 @@ public class Pkcs11Decrypter extends Decrypter {
 	     OAEPParameterSpec oaepParameters = constructOAEPParameters(encMethod.getAlgorithm(), encMethod.getDigestAlgorithm(),
 	       encMethod.getMGFAlgorithm(), encMethod.getOAEPparams());
 
-	     sun.security.rsa.RSAPadding padding = sun.security.rsa.RSAPadding.getInstance(
-	       sun.security.rsa.RSAPadding.PAD_OAEP_MGF1, keyLength / 8, new SecureRandom(), oaepParameters);
-	     byte[] secretKeyBytes = padding.unpad(paddedPlainText);
+	     byte[] secretKeyBytes = getSecretKeyBytes(paddedPlainText, oaepParameters);
 
 	     String jceKeyAlgorithm = JCEMapper.getJCEKeyAlgorithmFromURI(algorithm);
 
 	     return new SecretKeySpec(secretKeyBytes, jceKeyAlgorithm);
 	   }
 	   catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException | IllegalBlockSizeException
-	       | BadPaddingException | InvalidAlgorithmParameterException e) {
+	       | BadPaddingException | ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
 	     throw new XMLEncryptionException(e);
 	   }
 	 }
+
+	private byte[] getSecretKeyBytes(byte[] paddedPlainText, OAEPParameterSpec oaepParameters)
+			throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException,
+			InvocationTargetException {
+		Class<?> rsaClazz = Class.forName("sun.security.rsa.RSAPadding");
+		Class<?>[] parameterTypes = { int.class, int.class, SecureRandom.class, OAEPParameterSpec.class };
+		Constructor<?> constructor = rsaClazz.getConstructor(parameterTypes);
+		constructor.setAccessible(true);
+
+		Object[] args = { 4, keyLength / 8, new SecureRandom(), oaepParameters };
+
+		Object object = constructor.newInstance(args);
+
+		Class<?>[] unpadParamType = { byte[].class };
+		Method unPadMethod = rsaClazz.getMethod("unpad", unpadParamType);
+		unPadMethod.setAccessible(true);
+		Object[] argsPadded = { paddedPlainText };
+		Object padding = unPadMethod.invoke(object, argsPadded);
+
+		byte[] secretKeyBytes = (byte[]) padding;
+		return secretKeyBytes;
+	}
 
 	 /**
 	  * Construct an OAEPParameterSpec object from the given parameters

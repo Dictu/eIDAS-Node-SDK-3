@@ -24,15 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import eidassaml.starterkit.Constants;
 
 public class TemplateLoader {
 	
-	private static final Log LOG = LogFactory.getLog(TemplateLoader.class);
-
 	private static boolean isInit = false;
 	private static HashMap<String,String> map; 
 	

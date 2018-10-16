@@ -311,8 +311,7 @@ public class XMLSignatureHandler
       }
       catch (SignatureException e)
       {
-    	  String s = e.getMessage();
-        /* Nothing to do */
+    	  //ignore
       }
       catch (Exception e)
       {
