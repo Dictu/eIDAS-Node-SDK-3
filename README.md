@@ -1,7 +1,6 @@
-eIDAS-Node-SDK-3 [![GitHub release](https://img.shields.io/github/release/Dictu/eIDAS-Node-SDK-3.svg?maxAge=2592000?style=flat-square)]() [![license](https://img.shields.io/github/license/Dictu/eIDAS-Node-SDK-3.svg?maxAge=2592000?style=flat-square)]()
+# eIDAS-Node-SDK-3 [![GitHub release](https://img.shields.io/github/release/Dictu/eIDAS-Node-SDK-3.svg?maxAge=2592000?style=flat-square)]() [![license](https://img.shields.io/github/license/Dictu/eIDAS-Node-SDK-3.svg?maxAge=2592000?style=flat-square)]()
 
-Getting started
-======
+## Getting started
 
 Check out the project and run maven
 
