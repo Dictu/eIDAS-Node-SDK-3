@@ -55,7 +55,19 @@
 		<dependency>
 		    <groupId>org.opensaml</groupId>
 		    <artifactId>opensaml-security-api</artifactId>
-		    <version>3.4.2</version>
+        <version>3.4.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.60</version>
 		</dependency>
 		
 		<dependency>
@@ -67,11 +79,23 @@
 		    <groupId>org.opensaml</groupId>
 		    <artifactId>opensaml-saml-impl</artifactId>
 		    <version>3.4.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-collections</groupId>
+					<artifactId>commons-collections</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.opensaml</groupId>
 		    <artifactId>opensaml-security-impl</artifactId>
 		    <version>3.4.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -111,6 +135,20 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<configuration>
+					<failBuildOnCVSS>8</failBuildOnCVSS>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
