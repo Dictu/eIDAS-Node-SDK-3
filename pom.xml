@@ -15,21 +15,27 @@
 
 	<repositories>
 		<repository>
-			<id>apache-maven</id>
-			<name>Apache maven repo</name>
-			<url>https://repo.maven.apache.org/maven2</url>
+			<id>gitlab-maven</id>
+			<!-- Groep 3 is de Internationaal groep in Gitlab -->
+			<url>https://l1182e0005.cicapp.nl/api/v4/groups/3/-/packages/maven</url>
 		</repository>
 		<repository>
 			<id>shibboleth</id>
 			<name>Shibboleth maven repo</name>
 			<url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
 		</repository>
-		<repository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>http://central.maven.org/maven2/</url>
-		</repository>
 	</repositories>
+	<!-- In de nl-eidas-koppelpunt repo aangezien deze in github staat en niet gitlab -->
+	<distributionManagement>
+		<repository>
+			<id>gitlab-maven</id>
+			<url>https://l1182e0005.cicapp.nl/api/v4/projects/24/packages/maven</url>
+		</repository>
+		<snapshotRepository>
+			<id>gitlab-maven</id>
+			<url>https://l1182e0005.cicapp.nl/api/v4/projects/24/packages/maven</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencyManagement>
 		<dependencies>
