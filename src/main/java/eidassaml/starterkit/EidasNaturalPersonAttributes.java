@@ -22,14 +22,7 @@ package eidassaml.starterkit;
 import java.lang.reflect.InvocationTargetException;
 
 import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.BirthNameAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.CurrentAddressAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.DateOfBirthAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.FamilyNameAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.GenderAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.GivenNameAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.PersonIdentifierAttribute;
-import eidassaml.starterkit.person_attributes.natural_persons_attribute.PlaceOfBirthAttribute;
+import eidassaml.starterkit.person_attributes.natural_persons_attribute.*;
 
 public enum EidasNaturalPersonAttributes implements EidasPersonAttributes{
 	FirstName("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName", "FirstName", GivenNameAttribute.class),
@@ -39,7 +32,8 @@ public enum EidasNaturalPersonAttributes implements EidasPersonAttributes{
 	PlaceOfBirth("http://eidas.europa.eu/attributes/naturalperson/PlaceOfBirth", "PlaceOfBirth", PlaceOfBirthAttribute.class),
 	Gender("http://eidas.europa.eu/attributes/naturalperson/Gender", "Gender", GenderAttribute.class),
 	CurrentAddress("http://eidas.europa.eu/attributes/naturalperson/CurrentAddress", "CurrentAddress", CurrentAddressAttribute.class),
-	PersonIdentifier("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier", "PersonIdentifier", PersonIdentifierAttribute.class);
+	PersonIdentifier("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier", "PersonIdentifier", PersonIdentifierAttribute.class),
+	AdditionalAttribute("http://eidas.europa.eu/attributes/naturalperson/AdditionalAttribute", "AdditionalAttribute",AdditionalNaturalPersonAttribute .class);
 	public final String NAME;
 	public final String FRIENDLY_NAME;
 	public final Class<? extends EidasAttribute> ATTRIBUTE_CLASS;

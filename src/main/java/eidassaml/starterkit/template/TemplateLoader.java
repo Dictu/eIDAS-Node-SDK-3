@@ -66,6 +66,7 @@ public class TemplateLoader {
 				map.put("sic", StreamToString(TemplateLoader.class.getResourceAsStream("/template/sic_template.xml")));
 				map.put("taxreference", StreamToString(TemplateLoader.class.getResourceAsStream("/template/taxreference_template.xml")));
 				map.put("vatregistration", StreamToString(TemplateLoader.class.getResourceAsStream("/template/vatregistration_template.xml")));
+				map.put("additionalnaturalpersonattribute", StreamToString(TemplateLoader.class.getResourceAsStream("/template/additionalnaturalpersonattribute_template.xml")));
 				isInit = true;
 		}
 		

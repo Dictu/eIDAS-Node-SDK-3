@@ -85,8 +85,9 @@ public interface EidasAttribute {
 	public static final String TYPE_SIC="SICAttribute";
 	public static final String TYPE_TaxReference="TaxReferenceAttribute";
 	public static final String TYPE_VATRegistration ="VatRegistrationAttribute";
-	
-	
+	public static final String TYPE_AdditionalAttribute = "AdditionalAttribute";
+
+
 
 	
 }
