@@ -1,0 +1,4 @@
+<saml2:Attribute FriendlyName="AdditionalAttribute" Name=" http://eidas.europa.eu/attributes/naturalperson/AdditionalAttribute" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+<saml2:AttributeValue xsi:type="eidas:AdditionalAttributeType">$latinScript</saml2:AttributeValue>
+<saml2:AttributeValue xsi:type="eidas:AdditionalAttributeType" LatinScript="false">$nonLatinScript</saml2:AttributeValue>
+</saml2:Attribute>
