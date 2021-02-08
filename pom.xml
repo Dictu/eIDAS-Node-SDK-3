@@ -142,7 +142,6 @@
 				<version>5.2.1</version>
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
-					<failOnError>false</failOnError>
 				</configuration>
 				<executions>
 					<execution>
