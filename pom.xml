@@ -6,7 +6,7 @@
 	<groupId>eidassaml</groupId>
 	<artifactId>starterkit</artifactId>
 	<name>eIDAS-Node Starterkit</name>
-	<version>1.1.1-EIDAS-1271</version>
+	<version>1.1.2</version>
 	<packaging>jar</packaging>
 
 	<properties>
