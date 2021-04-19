@@ -132,6 +132,95 @@ public class TestEidasSaml {
 			assertEquals(_requestedAttributes.get(entry.getKey()), entry.getValue());
 		}
 	}
+	
+	@Test
+	public void createParseRequestMinimal() throws CertificateException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, XMLConfigurationException, XMLParserException, UnmarshallingException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, ErrorCodeException {
+		String _issuer = "https://test/";
+		String _destination = "test destination";
+		String _providerName = "test providername";
+		Map<EidasPersonAttributes, Boolean> _requestedAttributes = new HashMap<EidasPersonAttributes, Boolean>();
+		_requestedAttributes.put(EidasNaturalPersonAttributes.PersonIdentifier, true);
+		_requestedAttributes.put(EidasNaturalPersonAttributes.FamilyName, false);
+		_requestedAttributes.put(EidasNaturalPersonAttributes.FirstName, true);
+		_requestedAttributes.put(EidasNaturalPersonAttributes.DateOfBirth, true);
+		EidasRequestSectorType _selectorType = EidasRequestSectorType.Public;
+		EidasNameIdType _nameIdPolicy = EidasNameIdType.Persistent;
+		EidasLoA _loa = EidasLoA.Low;
+		List<X509Certificate> authors = new ArrayList<X509Certificate>();
+
+		X509Certificate cert = Utils
+				.readX509Certificate(TestEidasSaml.class.getResourceAsStream("/EidasSignerTest_x509.cer"));
+		authors.add(cert);
+		PrivateKey pk = (Utils.ReadPKCS12(TestEidasSaml.class.getResourceAsStream("/eidassignertest.p12"),
+				"123456".toCharArray())).getKey();
+		EidasSigner _signer = new EidasSigner(pk, cert);
+
+		byte[] request = EidasSaml.CreateRequest(_issuer, _destination, _providerName, _signer, _requestedAttributes,
+				_selectorType, _nameIdPolicy, _loa);
+		String resultStr = new String(org.bouncycastle.util.encoders.Base64.encode(request), StandardCharsets.UTF_8);
+		System.out.println(resultStr);
+		EidasRequest result = EidasSaml.ParseRequest(new ByteArrayInputStream(request), authors);
+		assertEquals(_issuer, result.getIssuer());
+	}
+	
+	@Test
+	public void createParseRequestMinimalLegal() throws CertificateException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, XMLConfigurationException, XMLParserException, UnmarshallingException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException, ErrorCodeException {
+		String _issuer = "https://test/";
+		String _destination = "test destination";
+		String _providerName = "test providername";
+		Map<EidasPersonAttributes, Boolean> _requestedAttributes = new HashMap<EidasPersonAttributes, Boolean>();
+		_requestedAttributes.put(EidasLegalPersonAttributes.LegalName, true);
+		_requestedAttributes.put(EidasLegalPersonAttributes.LegalPersonIdentifier, true);
+		EidasRequestSectorType _selectorType = EidasRequestSectorType.Public;
+		EidasNameIdType _nameIdPolicy = EidasNameIdType.Persistent;
+		EidasLoA _loa = EidasLoA.Low;
+		List<X509Certificate> authors = new ArrayList<X509Certificate>();
+
+		X509Certificate cert = Utils
+				.readX509Certificate(TestEidasSaml.class.getResourceAsStream("/EidasSignerTest_x509.cer"));
+		authors.add(cert);
+		PrivateKey pk = (Utils.ReadPKCS12(TestEidasSaml.class.getResourceAsStream("/eidassignertest.p12"),
+				"123456".toCharArray())).getKey();
+		EidasSigner _signer = new EidasSigner(pk, cert);
+
+		byte[] request = EidasSaml.CreateRequest(_issuer, _destination, _providerName, _signer, _requestedAttributes,
+				_selectorType, _nameIdPolicy, _loa);
+		String resultStr = new String(org.bouncycastle.util.encoders.Base64.encode(request), StandardCharsets.UTF_8);
+		System.out.println(resultStr);
+		EidasRequest result = EidasSaml.ParseRequest(new ByteArrayInputStream(request), authors);
+		assertEquals(_issuer, result.getIssuer());
+	}
+	
+	@Test
+	public void createParseRequestError() throws CertificateException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, XMLConfigurationException, XMLParserException, UnmarshallingException, MarshallingException, SignatureException, TransformerFactoryConfigurationError, TransformerException {
+		String _issuer = "https://test/";
+		String _destination = "test destination";
+		String _providerName = "test providername";
+		Map<EidasPersonAttributes, Boolean> _requestedAttributes = new HashMap<EidasPersonAttributes, Boolean>();
+		_requestedAttributes.put(EidasLegalPersonAttributes.LegalName, true);
+		EidasRequestSectorType _selectorType = EidasRequestSectorType.Public;
+		EidasNameIdType _nameIdPolicy = EidasNameIdType.Persistent;
+		EidasLoA _loa = EidasLoA.Low;
+		List<X509Certificate> authors = new ArrayList<X509Certificate>();
+
+		X509Certificate cert = Utils
+				.readX509Certificate(TestEidasSaml.class.getResourceAsStream("/EidasSignerTest_x509.cer"));
+		authors.add(cert);
+		PrivateKey pk = (Utils.ReadPKCS12(TestEidasSaml.class.getResourceAsStream("/eidassignertest.p12"),
+				"123456".toCharArray())).getKey();
+		EidasSigner _signer = new EidasSigner(pk, cert);
+
+		byte[] request = EidasSaml.CreateRequest(_issuer, _destination, _providerName, _signer, _requestedAttributes,
+				_selectorType, _nameIdPolicy, _loa);
+		String resultStr = new String(org.bouncycastle.util.encoders.Base64.encode(request), StandardCharsets.UTF_8);
+		System.out.println(resultStr);
+		try {
+			EidasSaml.ParseRequest(new ByteArrayInputStream(request), authors);
+		}
+		catch (ErrorCodeException e) {
+			assertEquals("Request does not contain minimum dataset.", e.getDetails()[0]);
+		}
+	}
 
 	@Test
 	public void requestFromXMLfile() throws XMLConfigurationException, IOException, CertificateException, 
