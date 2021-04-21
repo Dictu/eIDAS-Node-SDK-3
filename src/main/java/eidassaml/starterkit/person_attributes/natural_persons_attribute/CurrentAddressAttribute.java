@@ -21,12 +21,13 @@ package eidassaml.starterkit.person_attributes.natural_persons_attribute;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -34,6 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import eidassaml.starterkit.EidasAttribute;
 import eidassaml.starterkit.EidasNaturalPersonAttributes;
 import eidassaml.starterkit.Utils;
+import eidassaml.starterkit.person_attributes.EidasPersonAttributes;
 import eidassaml.starterkit.template.TemplateLoader;
 
 public class CurrentAddressAttribute implements EidasAttribute{
@@ -70,7 +72,6 @@ public class CurrentAddressAttribute implements EidasAttribute{
 		this.postCode = postCode;
 		this.pOBOX = pOBOX;
 		this.locatorName = locatorName;
-		this.locatorDesignator = locatorDesignator;
 		this.cvaddressArea = cvaddressArea;
 		this.adminunitFirstline = adminunitFirstline;
 		this.adminunitSecondline = adminunitSecondline;
@@ -104,12 +105,14 @@ public class CurrentAddressAttribute implements EidasAttribute{
 	 */
 	public void parseXML(String xmlString) throws SAXException
 	{
-		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try {
 			String xml = "<root>"+xmlString+"</root>";
-			SAXParser saxParser = factory.newSAXParser();
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser parser = factory.newSAXParser();
+			parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			AddressAttributeXMLHandler handler = new AddressAttributeXMLHandler();
-			saxParser.parse(new ByteArrayInputStream(xml.getBytes("UTF-8")), handler);
+			parser.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)), handler);
 			this.locatorDesignator = handler.locatorDesignator;
 			this.thoroughfare = handler.thoroughfare;
 			this.postName = handler.postName;

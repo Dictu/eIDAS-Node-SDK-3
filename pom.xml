@@ -6,7 +6,7 @@
 	<groupId>eidassaml</groupId>
 	<artifactId>starterkit</artifactId>
 	<name>eIDAS-Node Starterkit</name>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -139,9 +139,13 @@
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>5.2.1</version>
+				<version>6.1.2</version>
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
+					<failOnError>false</failOnError>
+					<suppressionFiles>
+						<suppressionFile>${project.basedir}\suppress.xml</suppressionFile>
+					</suppressionFiles>
 				</configuration>
 				<executions>
 					<execution>

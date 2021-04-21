@@ -74,14 +74,18 @@ public class EidasRequest {
 	
 	private static final Log LOG = LogFactory.getLog(EidasRequest.class);
 	
-	private final static String attributeTemplate = "<eidas:RequestedAttribute Name=\"$NAME\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"$ISREQ\"/>";
-	public final static SimpleDateFormat SimpleDf = Constants.SimpleSamlDf;
+	private static final String attributeTemplate = "<eidas:RequestedAttribute Name=\"$NAME\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"$ISREQ\"/>";
+	public static final SimpleDateFormat SimpleDf = Constants.SimpleSamlDf;
 	
-	private final static List<EidasNaturalPersonAttributes> MINIMUM_DATASET = Arrays.asList(new EidasNaturalPersonAttributes[] {
+	private static final List<EidasNaturalPersonAttributes> MINIMUM_DATASET = Arrays.asList(
 			EidasNaturalPersonAttributes.PersonIdentifier, 
 			EidasNaturalPersonAttributes.FamilyName, 
 			EidasNaturalPersonAttributes.FirstName, 
-			EidasNaturalPersonAttributes.DateOfBirth});
+			EidasNaturalPersonAttributes.DateOfBirth);
+	
+	private static final List<EidasLegalPersonAttributes> MINIMUM_LEGAL_DATASET = Arrays.asList(
+			EidasLegalPersonAttributes.LegalPersonIdentifier, 
+			EidasLegalPersonAttributes.LegalName);
 	
 	private String id;
 	private String destination;
@@ -407,12 +411,13 @@ public class EidasRequest {
 	private static boolean containsMinimumDataSet(Map<EidasPersonAttributes, Boolean> requestedAttributes) {
 		if (null != requestedAttributes) {
 			return MINIMUM_DATASET.stream()
-					.allMatch(p->requestedAttributes.containsKey(p));
+					.allMatch(requestedAttributes::containsKey) ||
+					MINIMUM_LEGAL_DATASET.stream()
+					.allMatch(requestedAttributes::containsKey);
 		}
 		else {
 			return false;
 		}
 	}
-	
 
 }
